@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class BTCheckLineOfSiteItem : BTBaseNode
@@ -21,20 +22,24 @@ public class BTCheckLineOfSiteItem : BTBaseNode
 
     protected override TaskStatus OnUpdate()
     {
-        Vector3 directionToTarget = positionToCheck.position - currentPosition.position;
-
-        Debug.DrawRay(currentPosition.position, directionToTarget, Color.blue);
+        var directionToTarget = positionToCheck.position - currentPosition.position;
 
         if (Vector3.Angle(currentPosition.forward, directionToTarget) <= fieldOfView)
         {
-            if (Physics.Raycast(currentPosition.position, directionToTarget, out RaycastHit hit, maxViewDistance))
+            var ray = new Ray(currentPosition.position, directionToTarget);
+            Debug.DrawRay(currentPosition.position, directionToTarget, Color.blue);
+            if (Physics.Raycast(ray, out RaycastHit hit, maxViewDistance))
             {
                 if (hit.transform.root == positionToCheck)
                 {
                     return TaskStatus.Success;
                 }
+
+                return TaskStatus.Failed;
             }
         }
+
         return TaskStatus.Failed;
     }
 }
+

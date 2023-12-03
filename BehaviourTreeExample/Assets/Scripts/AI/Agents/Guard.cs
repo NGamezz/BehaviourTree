@@ -59,7 +59,7 @@ public class Guard : MonoBehaviour
 
         treePlayerChase =
             new BTSequence(
-                new BTCheckLineOfSiteItem(blackBoard.GetVariable<float>(VariableNames.ENEMY_FOV), blackBoard.GetVariable<Transform>(VariableNames.ENEMY_TRANSFORM), blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM), blackBoard.GetVariable<float>(VariableNames.ENEMY_MAX_VIEW_DISTANCE)),
+                new BTCheckLineOfSiteItem(blackBoard.GetVariable<float>(VariableNames.ENEMY_FOV), blackBoard.GetVariable<Transform>(VariableNames.ENEMY_TRANSFORM), blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM), blackBoard.GetVariable<float>(VariableNames.ENEMY_MAX_VIEW_DISTANCE) - 1.0f),
                 new BTAlwaysSuccesTask(() => Debug.Log("Player within distance.")),
                 new BTAlwaysSuccesTask(() => blackBoard.SetVariable(VariableNames.CHASING_PLAYER, true)),
 
