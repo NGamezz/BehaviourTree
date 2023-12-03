@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
-public class BTAlwaysSuccesTask : MonoBehaviour
+public class BTAlwaysSuccesTask : BTBaseNode
 {
-    // Start is called before the first frame update
-    void Start()
+    private Action action;
+
+    public BTAlwaysSuccesTask(Action action)
     {
-        
+        this.action = action;
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnEnter()
     {
-        
+        action?.Invoke();
+    }
+
+    protected override TaskStatus OnUpdate()
+    {
+        return TaskStatus.Success;
     }
 }

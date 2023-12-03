@@ -1,11 +1,12 @@
-///
-/// The Selector tries to find a child which return success, if one succeeds it return success, if a child fails it tries the next child, if all children return failed, it returns failed
-///
-public class BTSelector : BTComposite
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BTNextUponFail : BTComposite
 {
     private int currentIndex = 0;
 
-    public BTSelector(params BTBaseNode[] children) : base(children) { }
+    public BTNextUponFail(params BTBaseNode[] children) : base(children) { }
 
     protected override TaskStatus OnUpdate()
     {
@@ -14,7 +15,7 @@ public class BTSelector : BTComposite
             var result = children[currentIndex].Tick();
             switch (result)
             {
-                case TaskStatus.Success: return TaskStatus.Success;
+                case TaskStatus.Success: continue;
                 case TaskStatus.Failed: continue;
                 case TaskStatus.Running: return TaskStatus.Running;
             }

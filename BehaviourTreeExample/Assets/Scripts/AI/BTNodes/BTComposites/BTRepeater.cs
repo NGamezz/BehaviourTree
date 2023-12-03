@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 ///
 /// The Repeater node runs its child a number of times before returning success
 ///
@@ -5,11 +7,11 @@ public class BTRepeater : BTDecorator
 {
     private int amount = 0;
     private int currentLoop = 0;
-    public BTRepeater(int amount, BTBaseNode child) : base(child){ this.amount = amount; }
+    public BTRepeater(int amount, BTBaseNode child) : base(child) { this.amount = amount; }
 
     protected override TaskStatus OnUpdate()
     {
-        if(child.Tick() != TaskStatus.Running)
+        if (child.Tick() != TaskStatus.Running)
         {
             currentLoop++;
         }
@@ -37,3 +39,25 @@ public class BTRepeater : BTDecorator
     }
 }
 
+public class BTRepeatWhile : BTDecorator
+{
+    Func<bool> condition;
+
+    public BTRepeatWhile(Func<bool> condition, BTBaseNode child) : base(child)
+    {
+        this.condition = condition;
+    }
+
+    protected override TaskStatus OnUpdate()
+    {
+        if (condition())
+        {
+            child.Tick();
+            return TaskStatus.Running;
+        }
+        else
+        {
+            return TaskStatus.Success;
+        }
+    }
+}

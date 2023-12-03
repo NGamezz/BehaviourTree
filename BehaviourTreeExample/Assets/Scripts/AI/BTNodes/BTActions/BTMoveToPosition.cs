@@ -79,8 +79,7 @@ public class BTGetPlayerPosition : BTBaseNode
 
     protected override void OnEnter()
     {
-        var position = blackboard.GetVariable<Vector3>(playerPosition);
-        blackboard.SetVariable(VariableNames.TARGET_POSITION, position);
+        blackboard.SetVariable(VariableNames.TARGET_POSITION, blackboard.GetVariable<Transform>(playerPosition).position);
     }
 
     protected override TaskStatus OnUpdate()
