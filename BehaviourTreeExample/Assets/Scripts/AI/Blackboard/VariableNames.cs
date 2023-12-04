@@ -18,5 +18,10 @@ public static class VariableNames
     public const string ENEMY_FOV = "EnemyFieldOfView";
     public const string ENEMY_MAX_VIEW_DISTANCE = "EnemyMaxViewDistance";
     public const string ENEMY_CURRENT_WEAPON = "EnemyCurrentWeapon";
+    public const string ENEMY_NEAREST_WEAPON = "NearestWeapon";
     public const string AVAILABLE_WEAPON_PICKUP_POINTS = "AllAvailableWeapons";
+    public const string LOOKING_FOR_WEAPON = "LookingForWeapon";
+    public const string PATROL_MOVE_TASK = "PatrollingMoveNode";
+    public const string ON_RESET_PATROL = "EnemyPatrolOnReset";
+    public const string ATTACK = "EnemyIsAttacking";
 }

@@ -16,27 +16,24 @@ public class BTCheckLineOfSiteItem : BTBaseNode
         this.maxViewDistance = maxViewDistance;
     }
 
-    protected override void OnEnter()
-    {
-    }
-
     protected override TaskStatus OnUpdate()
     {
         var directionToTarget = positionToCheck.position - currentPosition.position;
 
-        if (Vector3.Angle(currentPosition.forward, directionToTarget) <= fieldOfView)
+        if (Vector3.Angle(currentPosition.forward, directionToTarget) > fieldOfView)
         {
-            var ray = new Ray(currentPosition.position, directionToTarget);
-            Debug.DrawRay(currentPosition.position, directionToTarget, Color.blue);
-            if (Physics.Raycast(ray, out RaycastHit hit, maxViewDistance))
-            {
-                if (hit.transform.root == positionToCheck)
-                {
-                    return TaskStatus.Success;
-                }
+            return TaskStatus.Failed;
+        }
 
-                return TaskStatus.Failed;
+        var ray = new Ray(currentPosition.position, directionToTarget);
+        if (Physics.Raycast(ray, out RaycastHit hit, maxViewDistance))
+        {
+            if (hit.transform.root == positionToCheck)
+            {
+                return TaskStatus.Success;
             }
+
+            return TaskStatus.Failed;
         }
 
         return TaskStatus.Failed;

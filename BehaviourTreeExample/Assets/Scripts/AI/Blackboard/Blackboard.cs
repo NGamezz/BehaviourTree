@@ -24,4 +24,12 @@ public class Blackboard
             dictionary.Add(name, variable);
         }
     }
+
+    public void ClearBlackBoard(bool confirmation = false, bool confirmation2 = false)
+    {
+        if (confirmation && confirmation2)
+        {
+            dictionary.Clear();
+        }
+    }
 }

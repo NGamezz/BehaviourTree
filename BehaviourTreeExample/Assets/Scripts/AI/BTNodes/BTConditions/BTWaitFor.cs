@@ -1,9 +1,9 @@
 public class BTWaitFor : BTBaseNode
 {
-    private int amount = 0;
+    private float amount = 0;
     private float currentAmount = 0;
 
-    public BTWaitFor(int amount)
+    public BTWaitFor(float amount)
     {
         this.amount = amount;
     }

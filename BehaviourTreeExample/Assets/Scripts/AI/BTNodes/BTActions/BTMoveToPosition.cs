@@ -45,19 +45,44 @@ public class BTMoveToPosition : BTBaseNode
 public class BTGetNextPatrolPosition : BTBaseNode
 {
     private Transform[] wayPoints;
-    public BTGetNextPatrolPosition(Transform[] wayPoints)
+    private string conditionVariableNameForSkip;
+    private bool skipSupport;
+
+    public BTGetNextPatrolPosition(Transform[] wayPoints, string conditionVariableName = "", bool skipSupport = false)
     {
         this.wayPoints = wayPoints;
+        this.conditionVariableNameForSkip = conditionVariableName;
+        this.skipSupport = skipSupport;
     }
 
     protected override void OnEnter()
     {
         int currentIndex = blackboard.GetVariable<int>(VariableNames.CURRENT_PATROL_INDEX);
-        currentIndex++;
-        if (currentIndex >= wayPoints.Length)
+
+        if (skipSupport)
         {
-            currentIndex = 0;
+            if (!blackboard.GetVariable<bool>(conditionVariableNameForSkip))
+            {
+                currentIndex++;
+                if (currentIndex >= wayPoints.Length)
+                {
+                    currentIndex = 0;
+                }
+            }
+            else
+            {
+                blackboard.SetVariable(conditionVariableNameForSkip, false);
+            }
         }
+        else
+        {
+            currentIndex++;
+            if (currentIndex >= wayPoints.Length)
+            {
+                currentIndex = 0;
+            }
+        }
+
         blackboard.SetVariable(VariableNames.CURRENT_PATROL_INDEX, currentIndex);
         blackboard.SetVariable(VariableNames.TARGET_POSITION, wayPoints[currentIndex].position);
     }
