@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 public class AssaultRifle : IWeapon
 {
     IWeaponOwner owner;
@@ -9,6 +11,6 @@ public class AssaultRifle : IWeapon
 
     public void Attack()
     {
-        //Pew Pew
+        UnityEngine.Debug.Log("Attack");
     }
 }

@@ -4,17 +4,21 @@ public class WeaponPickupPoint : MonoBehaviour
 {
     [SerializeField] private IWeapon availableAiWeapon;
 
-    public void SetWeapon()
+    private void Start()
     {
-        availableAiWeapon = new AssaultRifle();
+        SetWeapon(new AssaultRifle());
+    }
+
+    public void SetWeapon(IWeapon weapon)
+    {
+        availableAiWeapon = weapon;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Guard guard))
+        if (other.TryGetComponent(out IWeaponOwner weaponOwner))
         {
-            SetWeapon();
-            guard.AcquireWeapon(availableAiWeapon);
+            weaponOwner.AcquireWeapon(availableAiWeapon);
         }
     }
 }
