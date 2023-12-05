@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamagable
 {
     public Transform Camera;
     [SerializeField] private float rotationSpeed = 180f;
@@ -56,11 +56,6 @@ public class Player : MonoBehaviour
         ChangeAnimation(isMoving ? "Walk Crouch" : "Crouch Idle", isMoving ? 0.05f : 0.15f);
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
-
     public void TakeDamage(GameObject attacker, int damage)
     {
         animator.enabled = false;
@@ -76,23 +71,25 @@ public class Player : MonoBehaviour
         {
             rib.isKinematic = false;
             rib.useGravity = true;
-            rib.AddForce(Vector3.Scale(new Vector3(1,0.5f,1),(transform.position - attacker.transform.position).normalized * deathForce));
+            rib.AddForce(Vector3.Scale(new Vector3(1, 0.5f, 1), (transform.position - attacker.transform.position).normalized * deathForce));
         }
         ragdoll.transform.SetParent(null);
 
         gameObject.SetActive(false);
+
+        EventManager.InvokeEvent(EventType.GameOver);
     }
 
     private void GetComponentsRecursively<T>(GameObject obj, ref List<T> components)
     {
         T component = obj.GetComponent<T>();
-        if(component != null)
+        if (component != null)
         {
             components.Add(component);
         }
-        foreach(Transform t in obj.transform)
+        foreach (Transform t in obj.transform)
         {
-            if(t.gameObject == obj) { continue; }
+            if (t.gameObject == obj) { continue; }
             GetComponentsRecursively<T>(t.gameObject, ref components);
         }
     }

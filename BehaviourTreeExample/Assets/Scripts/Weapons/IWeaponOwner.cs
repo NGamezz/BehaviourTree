@@ -1,4 +1,4 @@
 public interface IWeaponOwner
 {
-    public void AcquireWeapon(IWeapon weapon);
+    public void AcquireWeapon(Weapon weapon);
 }

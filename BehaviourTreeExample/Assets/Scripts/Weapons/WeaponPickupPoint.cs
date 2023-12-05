@@ -1,24 +1,32 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Weapon))]
 public class WeaponPickupPoint : MonoBehaviour
 {
-    [SerializeField] private IWeapon availableAiWeapon;
+    [SerializeField] private Weapon availableAiWeapon;
 
     private void Start()
     {
-        SetWeapon(new AssaultRifle());
+        SetWeapon();
     }
 
-    public void SetWeapon(IWeapon weapon)
+    public void SetWeapon()
     {
-        availableAiWeapon = weapon;
+        availableAiWeapon = GetComponent<Weapon>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out IWeaponOwner weaponOwner))
         {
-            weaponOwner.AcquireWeapon(availableAiWeapon);
+            if (weaponOwner is MonoBehaviour owner)
+            {
+                Weapon weapon = (Weapon)owner.gameObject.AddComponent(availableAiWeapon.GetType());
+                weapon.Owner = weaponOwner;
+                weapon.AttackSpeed = availableAiWeapon.AttackSpeed;
+                weapon.ParticleEffectPrefab = availableAiWeapon.ParticleEffectPrefab;
+                weaponOwner.AcquireWeapon(weapon);
+            }
         }
     }
 }

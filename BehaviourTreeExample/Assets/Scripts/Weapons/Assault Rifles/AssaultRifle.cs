@@ -1,16 +1,40 @@
-using System.Diagnostics;
+using System.Collections;
+using UnityEngine;
 
-public class AssaultRifle : IWeapon
+//Not ideal, but should work for now.
+public class AssaultRifle : Weapon
 {
-    IWeaponOwner owner;
+    private bool canAttack = true;
+    private ParticleSystem particleEffect;
 
-    public void Pickup(IWeaponOwner owner)
+    private void Start()
     {
-        this.owner = owner;
+        particleEffect = Instantiate(ParticleEffectPrefab).GetComponent<ParticleSystem>();
     }
 
-    public void Attack()
+    public override void Attack(object thingToDamage)
     {
-        UnityEngine.Debug.Log("Attack");
+        if (canAttack)
+        {
+            StartCoroutine(StartAttack(thingToDamage));
+        }
+    }
+
+    private IEnumerator StartAttack(object thingToDamage = null)
+    {
+        if (thingToDamage is not MonoBehaviour thingToDamageMono) { yield break; }
+        if (Owner is not MonoBehaviour ownerMono) { yield break; }
+
+        Debug.Log("Attack");
+        canAttack = false;
+
+        particleEffect.transform.position = thingToDamageMono.transform.position;
+        particleEffect.Play();
+
+        thingToDamageMono.GetComponent<IDamagable>().TakeDamage(ownerMono.gameObject, 10);
+
+        yield return new WaitForSeconds(AttackSpeed);
+
+        canAttack = true;
     }
 }
