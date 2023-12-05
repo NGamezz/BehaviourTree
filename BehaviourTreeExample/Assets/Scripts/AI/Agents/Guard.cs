@@ -129,10 +129,11 @@ public class Guard : MonoBehaviour, IWeaponOwner
                            ),
 
                        //For performing the player chase.
-                       new BTCancelIfFalse(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < maxViewDistance + 1.0f,
+                       new BTSequence(
                            new BTGetPlayerPosition(VariableNames.PLAYER_TRANSFORM),
                            new BTAlwaysSuccesTask(() => { stateUiText.text = "State : Chasing Player."; treeAttackPlayer.OnReset(); }),
-                           new BTMoveToPosition(agent, moveSpeed, VariableNames.TARGET_POSITION, keepDistance)
+                           new BTMoveToPosition(agent, moveSpeed, VariableNames.TARGET_POSITION, keepDistance),
+                           new BTConditionNode(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < maxViewDistance + 1.0f)
                            ),
 
                        //For Disabling the player chase.
@@ -142,7 +143,7 @@ public class Guard : MonoBehaviour, IWeaponOwner
                            new BTAlwaysSuccesTask(() => blackBoard.SetVariable(VariableNames.CHASING_PLAYER, false)),
                            new BTAlwaysSuccesTask(() => stateUiText.text = "State : Disable Chasing Player.")
                             )
-           )));
+          )));
 
         treeWeaponAcquisition =
             new BTSequence(
@@ -160,11 +161,12 @@ public class Guard : MonoBehaviour, IWeaponOwner
 
                 new BTRepeatWhile(() => blackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING),
                     new BTSelector(
-                        //Handling For During The Attack. Get's cancelled if the condition is false.
-                        new BTCancelIfFalse(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange,
+                        //Handling For During The Attack.
+                        new BTSequence(
                             new BTWaitFor(2.5f),
                             new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Transform>(VariableNames.OWN_TRANSFORM).LookAt(blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM))),
-                            new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Weapon>(VariableNames.ENEMY_CURRENT_WEAPON).Attack(blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).GetComponent<IDamagable>()))
+                            new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Weapon>(VariableNames.ENEMY_CURRENT_WEAPON).Attack(blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).GetComponent<IDamagable>())),
+                            new BTConditionNode(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange)
                         ),
 
                         //Disabling the attack once the distance is greater than the attack range.

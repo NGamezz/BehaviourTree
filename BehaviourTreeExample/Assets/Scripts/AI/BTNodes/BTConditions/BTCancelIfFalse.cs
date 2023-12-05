@@ -25,6 +25,7 @@ public class BTCancelIfFalse : BTComposite
             }
 
             var result = children[currentIndex].Tick();
+
             switch (result)
             {
                 case TaskStatus.Success: continue;
