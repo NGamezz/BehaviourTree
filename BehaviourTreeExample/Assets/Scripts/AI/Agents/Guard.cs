@@ -140,7 +140,7 @@ public class Guard : MonoBehaviour, IWeaponOwner
                            new BTGetPosition(VariableNames.PLAYER_TRANSFORM, blackBoard),
                            new BTAlwaysSuccesTask(() => stateUiText.text = "State : Chasing Player."),
                            chaseMovement = new BTMoveToPosition(agent, MoveSpeed, VariableNames.TARGET_POSITION, KeepDistance),
-                           new BTConditionNode(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < maxViewDistance + 1.0f)
+                           new BTConditionNode(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < maxViewDistance)
                            ),
 
                        //Disable the player chase.
