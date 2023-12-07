@@ -43,6 +43,7 @@ public class BTFindHidePosition : BTBaseNode
 
             if ( NavMesh.SamplePosition(colliders[i].transform.position, out NavMeshHit hit, 2.0f, agent.areaMask) )
             {
+                //To obtain the normal of the hit.
                 if ( !NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask) )
                 {
                     Debug.LogWarning("Failed to find closest Edge.");
@@ -55,6 +56,7 @@ public class BTFindHidePosition : BTBaseNode
                 }
                 else
                 {
+                    //Try to get a position with an offset.
                     if ( NavMesh.SamplePosition(colliders[i].transform.position - (transformToHideFrom.position - hit.position) * 2.0f, out NavMeshHit hit2, 2.0f, agent.areaMask) )
                     {
                         if ( !NavMesh.FindClosestEdge(hit2.position, out hit2, agent.areaMask) )
@@ -74,6 +76,7 @@ public class BTFindHidePosition : BTBaseNode
         return TaskStatus.Failed;
     }
 
+    //For the sorting of the colliders Array.
     private int CompareCloserOne ( Collider a, Collider b )
     {
         if ( a == null && b != null )

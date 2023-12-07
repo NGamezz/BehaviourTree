@@ -12,7 +12,7 @@ public class BTLaunchObjectTo : BTBaseNode
     GameObject objectInstance;
     private bool launched = false;
 
-    public BTLaunchObjectTo(Transform launcherTransform, GameObject objectToLaunchPrefab, float moveSpeed, Blackboard sharedBlackboard, string targetVariableNameTransform)
+    public BTLaunchObjectTo ( Transform launcherTransform, GameObject objectToLaunchPrefab, float moveSpeed, Blackboard sharedBlackboard, string targetVariableNameTransform )
     {
         this.objectToLaunchPrefab = objectToLaunchPrefab;
         this.launcherTransform = launcherTransform;
@@ -21,18 +21,18 @@ public class BTLaunchObjectTo : BTBaseNode
         this.sharedBlackboard = sharedBlackboard;
     }
 
-    protected override TaskStatus OnUpdate()
+    protected override TaskStatus OnUpdate ()
     {
         targetPosition = sharedBlackboard.GetVariable<Transform>(targetVariableName).position;
 
-        if (!launched)
+        if ( !launched )
         {
             launched = true;
             objectInstance = GameObject.Instantiate(objectToLaunchPrefab, launcherTransform.position, Quaternion.identity);
         }
         var directionToTarget = targetPosition - objectInstance.transform.position;
 
-        if (directionToTarget.magnitude > 1.0f)
+        if ( directionToTarget.magnitude > 1.0f )
         {
             objectInstance.transform.Translate(moveSpeed * Time.fixedDeltaTime * directionToTarget);
             return TaskStatus.Running;

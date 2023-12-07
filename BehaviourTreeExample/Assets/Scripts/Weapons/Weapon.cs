@@ -6,5 +6,5 @@ public abstract class Weapon : MonoBehaviour
     public object Owner;
     public GameObject ParticleEffectPrefab;
 
-    public abstract void Attack(IDamagable thingToDamage, Vector3 positionForParticles, GameObject owner);
+    public abstract void Attack ( IDamagable thingToDamage, Vector3 positionForParticles, GameObject owner );
 }

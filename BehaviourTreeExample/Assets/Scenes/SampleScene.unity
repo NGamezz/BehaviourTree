@@ -679,6 +679,7 @@ MonoBehaviour:
   moveSpeed: 3
   deathForce: 1500
   ragdoll: {fileID: 1392164572}
+  health: 100
 --- !u!136 &1267729047
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1944,14 +1945,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5355803672657350516, guid: f14830ce88e545c418a08e82433d44ce,
         type: 3}
+      propertyPath: MoveSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5355803672657350516, guid: f14830ce88e545c418a08e82433d44ce,
+        type: 3}
       propertyPath: smokeBombPrefab
       value: 
       objectReference: {fileID: 2979482803247772501, guid: c77a55349f3740541a472e770a6ec7b0,
         type: 3}
     - target: {fileID: 5355803672657350516, guid: f14830ce88e545c418a08e82433d44ce,
         type: 3}
+      propertyPath: MaxDistanceToPlayer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5355803672657350516, guid: f14830ce88e545c418a08e82433d44ce,
+        type: 3}
       propertyPath: lineOfSightRadiusHide
-      value: 15
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8985839598617077448, guid: f14830ce88e545c418a08e82433d44ce,
         type: 3}

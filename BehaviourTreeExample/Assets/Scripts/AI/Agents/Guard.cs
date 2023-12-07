@@ -128,14 +128,14 @@ public class Guard : MonoBehaviour, IWeaponOwner
                            new BTWaitFor(1)
                            ),
 
-                       //During Attack, Wait
+                       //During Attack/Smoked, Wait
                        new BTSequence(
                            new BTConditionNodeIfOneIsTrue(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange,
                            () => sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
                            new BTWaitFor(1)
                            ),
 
-                       //For performing the player chase.
+                       //Perform the player chase.
                        new BTSequence(
                            new BTGetPosition(VariableNames.PLAYER_TRANSFORM, blackBoard),
                            new BTAlwaysSuccesTask(() => stateUiText.text = "State : Chasing Player."),
@@ -143,7 +143,7 @@ public class Guard : MonoBehaviour, IWeaponOwner
                            new BTConditionNode(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < maxViewDistance + 1.0f)
                            ),
 
-                       //For Disabling the player chase.
+                       //Disable the player chase.
                        new BTSequence(
                            new BTAlwaysSuccesTask(() => Debug.Log("Player Outside Of Distance.")),
                            new BTWaitFor(2.0f),
@@ -178,17 +178,19 @@ public class Guard : MonoBehaviour, IWeaponOwner
                     new BTSelector(
 
                         //Handling For During The Attack.
-                        new BTCancelIfFalse(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange,
-                        () => !sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
+                        new BTSequence(
+                            new BTConditionNode(() => !sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
+                            new BTCancelIfFalse(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange,
+                            () => !sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
                                  new BTAlwaysSuccesTask(() => stateUiText.text = "State : Attacking."),
                                  new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Transform>(VariableNames.OWN_TRANSFORM).LookAt(blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM))),
                                  new BTWaitFor(delayBetweenAttack),
-                                 new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Weapon>(VariableNames.ENEMY_CURRENT_WEAPON).Attack(player, player.transform.position, gameObject))),
+                                 new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Weapon>(VariableNames.ENEMY_CURRENT_WEAPON).Attack(player, player.transform.position, gameObject)))),
 
                         //Handling For During The Smoke Window.
                         new BTSequence(
                             new BTRepeatWhile(() => sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
-                                new BTCancelIfFalse(() => sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
+                                new BTSequence(
                                     new BTAlwaysSuccesTask(() => sharedBlackBoard.blackBoard.SetVariable(VariableNames.IS_ATTACKING, false)),
                                     new BTAlwaysSuccesTask(() => stateUiText.text = "State : Smoked."),
                                     new BTWaitFor(waitTime),

@@ -1,6 +1,6 @@
 public class BTAlwaysFalse : BTBaseNode
 {
-    protected override TaskStatus OnUpdate()
+    protected override TaskStatus OnUpdate ()
     {
         return TaskStatus.Failed;
     }

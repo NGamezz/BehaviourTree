@@ -8,7 +8,7 @@ public class BTGetNearestFromArray : BTBaseNode
     private string variableName;
     private Blackboard board;
 
-    public BTGetNearestFromArray(Transform[] transforms, Transform currentTransform, Blackboard board, string variableName)
+    public BTGetNearestFromArray ( Transform[] transforms, Transform currentTransform, Blackboard board, string variableName )
     {
         this.transforms = transforms;
         this.currentTransform = currentTransform;
@@ -16,14 +16,14 @@ public class BTGetNearestFromArray : BTBaseNode
         this.variableName = variableName;
     }
 
-    protected override TaskStatus OnUpdate()
+    protected override TaskStatus OnUpdate ()
     {
         var currentShortesDistance = float.MaxValue;
         Transform currentShortestTransform = transforms[0];
 
-        foreach (Transform t in transforms)
+        foreach ( Transform t in transforms )
         {
-            if (Vector3.Distance(t.position, currentTransform.position) < currentShortesDistance)
+            if ( Vector3.Distance(t.position, currentTransform.position) < currentShortesDistance )
             {
                 currentShortestTransform = t;
             }

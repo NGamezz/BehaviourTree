@@ -5,37 +5,40 @@ public class BTSequence : BTComposite
 {
     private int currentIndex = 0;
 
-    public BTSequence(params BTBaseNode[] children) : base(children) { }
+    public BTSequence ( params BTBaseNode[] children ) : base(children) { }
 
-    protected override TaskStatus OnUpdate()
+    protected override TaskStatus OnUpdate ()
     {
-        for (; currentIndex < children.Length; currentIndex++)
+        for ( ; currentIndex < children.Length; currentIndex++ )
         {
             var result = children[currentIndex].Tick();
-            switch (result)
+            switch ( result )
             {
-                case TaskStatus.Success: continue;
-                case TaskStatus.Failed: return TaskStatus.Failed;
-                case TaskStatus.Running: return TaskStatus.Running;
+                case TaskStatus.Success:
+                    continue;
+                case TaskStatus.Failed:
+                    return TaskStatus.Failed;
+                case TaskStatus.Running:
+                    return TaskStatus.Running;
             }
         }
         return TaskStatus.Success;
     }
 
-    protected override void OnEnter()
+    protected override void OnEnter ()
     {
         currentIndex = 0;
     }
 
-    protected override void OnExit()
+    protected override void OnExit ()
     {
         currentIndex = 0;
     }
 
-    public override void OnReset()
+    public override void OnReset ()
     {
         currentIndex = 0;
-        foreach (var c in children)
+        foreach ( var c in children )
         {
             c.OnReset();
         }
@@ -46,37 +49,40 @@ public class Condition : BTComposite
 {
     private int currentIndex = 0;
 
-    public Condition(params BTBaseNode[] children) : base(children) { }
+    public Condition ( params BTBaseNode[] children ) : base(children) { }
 
-    protected override TaskStatus OnUpdate()
+    protected override TaskStatus OnUpdate ()
     {
-        for (; currentIndex < children.Length; currentIndex++)
+        for ( ; currentIndex < children.Length; currentIndex++ )
         {
             var result = children[currentIndex].Tick();
-            switch (result)
+            switch ( result )
             {
-                case TaskStatus.Success: continue;
-                case TaskStatus.Failed: return TaskStatus.Failed;
-                case TaskStatus.Running: return TaskStatus.Running;
+                case TaskStatus.Success:
+                    continue;
+                case TaskStatus.Failed:
+                    return TaskStatus.Failed;
+                case TaskStatus.Running:
+                    return TaskStatus.Running;
             }
         }
         return TaskStatus.Success;
     }
 
-    protected override void OnEnter()
+    protected override void OnEnter ()
     {
         currentIndex = 0;
     }
 
-    protected override void OnExit()
+    protected override void OnExit ()
     {
         currentIndex = 0;
     }
 
-    public override void OnReset()
+    public override void OnReset ()
     {
         currentIndex = 0;
-        foreach (var c in children)
+        foreach ( var c in children )
         {
             c.OnReset();
         }
