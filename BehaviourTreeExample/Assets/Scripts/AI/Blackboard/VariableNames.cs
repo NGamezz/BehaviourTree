@@ -14,4 +14,6 @@
     public const string ON_RESET_PATROL = "EnemyPatrolOnReset";
     public const string IS_ATTACKING = "EnemyIsAttacking";
     public const string CURRENT_ATTACKING_ENEMY = "CurrentAttackingEnemy";
+    public const string ALL_HIDE_OBJECTS_IN_RANGE = "AllHideObjectsInRange";
+    public const string SMOKE_BOMB = "CancelAttack";
 }

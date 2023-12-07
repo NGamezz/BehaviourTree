@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 ///
 /// The Selector tries to find a child which return success, if one succeeds it return success, if a child fails it tries the next child, if all children return failed, it returns failed
 ///
@@ -35,9 +36,9 @@ public class BTSelector : BTComposite
     public override void OnReset()
     {
         currentIndex = 0;
-        foreach (var c in children)
+        Parallel.For(0, children.Length, i =>
         {
-            c.OnReset();
-        }
+            children[i].OnReset();
+        });
     }
 }

@@ -93,18 +93,22 @@ public class BTGetNextPatrolPosition : BTBaseNode
     }
 }
 
-public class BTGetPlayerPosition : BTBaseNode
+//Uses a transform to set the target position.
+public class BTGetPosition : BTBaseNode
 {
-    private string playerPosition;
+    private string variableName;
+    private Blackboard currentBlackBoard;
 
-    public BTGetPlayerPosition(string playerPosition)
+    public BTGetPosition(string variableName, Blackboard currentBlackBoard)
     {
-        this.playerPosition = playerPosition;
+        this.variableName = variableName;
+        this.currentBlackBoard = currentBlackBoard;
     }
 
     protected override void OnEnter()
     {
-        blackboard.SetVariable(VariableNames.TARGET_POSITION, blackboard.GetVariable<Transform>(playerPosition).position);
+        Vector3 position = currentBlackBoard.GetVariable<Transform>(variableName).position;
+        blackboard.SetVariable(VariableNames.TARGET_POSITION, position);
     }
 
     protected override TaskStatus OnUpdate()

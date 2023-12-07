@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Weapon))]
 public class WeaponPickupPoint : MonoBehaviour
 {
-    [SerializeField] private Weapon availableAiWeapon;
+    private Weapon availableAiWeapon;
 
     private void Start()
     {
