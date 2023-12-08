@@ -48,35 +48,35 @@ public class Ninja : MonoBehaviour
     {
         blackBoard.SetVariable(VariableNames.PLAYER_TRANSFORM, FindObjectOfType<Player>().transform);
         blackBoard.SetVariable(VariableNames.TARGET_POSITION, Vector3.zero);
-        sharedBlackboard.blackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
+        sharedBlackboard.BlackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
 
         tree =
             new BTSequence(
                 new BTConditionNode(() => !gameOver),
                 new BTSelector(
                     //Go to the player Position. Cancel if an attack starts.
-                    new BTCancelIfFalse(() => !sharedBlackboard.blackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING),
+                    new BTCancelIfFalse(() => !sharedBlackboard.BlackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING),
                         new BTConditionNode(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) > (MaxDistanceToPlayer / 2)),
                         new BTGetPosition(VariableNames.PLAYER_TRANSFORM, blackBoard),
                         new BTAlwaysSuccesTask(() => stateUiText.text = "Chasing Player."),
                         new BTMoveToPosition(agent, MoveSpeed, VariableNames.TARGET_POSITION, KeepDistance),
-                        new BTConditionNode(() => sharedBlackboard.blackBoard.GetVariable<Transform>(VariableNames.CURRENT_ATTACKING_ENEMY) == null)),
+                        new BTConditionNode(() => sharedBlackboard.BlackBoard.GetVariable<Transform>(VariableNames.CURRENT_ATTACKING_ENEMY) == null)),
 
                     //Hide once, then attack the enemy with smoke bombs for as long as it is attacking.
                     new BTSequence(
-                        new BTConditionNode(() => sharedBlackboard.blackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING), () => !sharedBlackboard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
+                        new BTConditionNode(() => sharedBlackboard.BlackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING), () => !sharedBlackboard.BlackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
                         new BTAlwaysSuccesTask(() => stateUiText.text = "Hiding."),
                         new BTGetNearbyObjects(transform.position, hideAbleLayer, lineOfSightRadiusHide, 5, VariableNames.ALL_HIDE_OBJECTS_IN_RANGE),
-                        new BTFindHidePosition(VariableNames.ALL_HIDE_OBJECTS_IN_RANGE, agent, VariableNames.CURRENT_ATTACKING_ENEMY, sharedBlackboard.blackBoard, transform, MaxDistanceToPlayer),
+                        new BTFindHidePosition(VariableNames.ALL_HIDE_OBJECTS_IN_RANGE, agent, VariableNames.CURRENT_ATTACKING_ENEMY, sharedBlackboard.BlackBoard, transform, MaxDistanceToPlayer),
                         new BTMoveToPosition(agent, MoveSpeed, VariableNames.TARGET_POSITION, KeepDistance),
 
-                        new BTRepeatWhile(() => sharedBlackboard.blackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING),
-                            new BTCancelIfFalse(() => sharedBlackboard.blackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING), () => !sharedBlackboard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
+                        new BTRepeatWhile(() => sharedBlackboard.BlackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING),
+                            new BTCancelIfFalse(() => sharedBlackboard.BlackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING), () => !sharedBlackboard.BlackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
                                 new BTAlwaysSuccesTask(() => stateUiText.text = "Throwing Smoke."),
                                 new BTAlwaysSuccesTask(() => Debug.Log("Throwing Smoke.")),
-                                new BTGetPosition(VariableNames.CURRENT_ATTACKING_ENEMY, sharedBlackboard.blackBoard),
-                                new BTLaunchObjectTo(transform, smokeBombPrefab, 10.0f, sharedBlackboard.blackBoard, VariableNames.CURRENT_ATTACKING_ENEMY),
-                                new BTAlwaysSuccesTask(() => sharedBlackboard.blackBoard.SetVariable(VariableNames.SMOKE_BOMB, true)),
+                                new BTGetPosition(VariableNames.CURRENT_ATTACKING_ENEMY, sharedBlackboard.BlackBoard),
+                                new BTLaunchObjectTo(transform, smokeBombPrefab, 10.0f, sharedBlackboard.BlackBoard, VariableNames.CURRENT_ATTACKING_ENEMY),
+                                new BTAlwaysSuccesTask(() => sharedBlackboard.BlackBoard.SetVariable(VariableNames.SMOKE_BOMB, true)),
                                 new BTWaitFor(delayBetweenSmokeBombs)
                             )),
                         new BTAlwaysFalse()

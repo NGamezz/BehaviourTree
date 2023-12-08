@@ -86,12 +86,12 @@ public class Guard : MonoBehaviour, IWeaponOwner
         blackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
         blackBoard.SetVariable(VariableNames.ON_RESET_PATROL, false);
 
-        sharedBlackBoard.blackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
-        sharedBlackBoard.blackBoard.SetVariable(VariableNames.SMOKE_BOMB, false);
+        sharedBlackBoard.BlackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
+        sharedBlackBoard.BlackBoard.SetVariable(VariableNames.SMOKE_BOMB, false);
 
-        if ( sharedBlackBoard.blackBoard.GetVariable<Transform[]>(VariableNames.AVAILABLE_WEAPON_PICKUP_POINTS) == null )
+        if ( sharedBlackBoard.BlackBoard.GetVariable<Transform[]>(VariableNames.AVAILABLE_WEAPON_PICKUP_POINTS) == null )
         {
-            sharedBlackBoard.blackBoard.SetVariable(VariableNames.AVAILABLE_WEAPON_PICKUP_POINTS, FindObjectsOfType<WeaponPickupPoint>().Select(x => x.GetComponent<Transform>()).ToArray());
+            sharedBlackBoard.BlackBoard.SetVariable(VariableNames.AVAILABLE_WEAPON_PICKUP_POINTS, FindObjectsOfType<WeaponPickupPoint>().Select(x => x.GetComponent<Transform>()).ToArray());
         }
 
         if ( WayPoints.Length != 0 )
@@ -131,7 +131,7 @@ public class Guard : MonoBehaviour, IWeaponOwner
                        //During Attack/Smoked, Wait
                        new BTSequence(
                            new BTConditionNodeIfOneIsTrue(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange,
-                           () => sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
+                           () => sharedBlackBoard.BlackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
                            new BTWaitFor(1)
                            ),
 
@@ -158,7 +158,7 @@ public class Guard : MonoBehaviour, IWeaponOwner
                 new BTAlwaysSuccesTask(() => blackBoard.SetVariable(VariableNames.LOOKING_FOR_WEAPON, true)),
                 new BTAlwaysSuccesTask(() => patrolTree.OnReset()),
                 new BTAlwaysSuccesTask(() => stateUiText.text = "State : Looking For Weapon."),
-                new BTGetNearestFromArray(sharedBlackBoard.blackBoard.GetVariable<Transform[]>(VariableNames.AVAILABLE_WEAPON_PICKUP_POINTS), blackBoard.GetVariable<Transform>(VariableNames.OWN_TRANSFORM),
+                new BTGetNearestFromArray(sharedBlackBoard.BlackBoard.GetVariable<Transform[]>(VariableNames.AVAILABLE_WEAPON_PICKUP_POINTS), blackBoard.GetVariable<Transform>(VariableNames.OWN_TRANSFORM),
                 blackBoard, VariableNames.ENEMY_NEAREST_WEAPON_POSITION),
                 new BTMoveToPosition(agent, MoveSpeed, VariableNames.ENEMY_NEAREST_WEAPON_POSITION, KeepDistance)
           );
@@ -170,8 +170,8 @@ public class Guard : MonoBehaviour, IWeaponOwner
                 () => blackBoard.GetVariable<Weapon>(VariableNames.ENEMY_CURRENT_WEAPON) != null),
                 new BTAlwaysSuccesTask(() => patrolTree.OnReset()),
                 new BTAlwaysSuccesTask(() => blackBoard.SetVariable(VariableNames.IS_ATTACKING, true)),
-                new BTAlwaysSuccesTask(() => sharedBlackBoard.blackBoard.SetVariable(VariableNames.IS_ATTACKING, true)),
-                new BTAlwaysSuccesTask(() => sharedBlackBoard.blackBoard.SetVariable(VariableNames.CURRENT_ATTACKING_ENEMY, transform)),
+                new BTAlwaysSuccesTask(() => sharedBlackBoard.BlackBoard.SetVariable(VariableNames.IS_ATTACKING, true)),
+                new BTAlwaysSuccesTask(() => sharedBlackBoard.BlackBoard.SetVariable(VariableNames.CURRENT_ATTACKING_ENEMY, transform)),
                 new BTAlwaysSuccesTask(() => chaseMovement.OnReset()),
 
                 new BTRepeatWhile(() => blackBoard.GetVariable<bool>(VariableNames.IS_ATTACKING),
@@ -179,9 +179,9 @@ public class Guard : MonoBehaviour, IWeaponOwner
 
                         //Handling For During The Attack.
                         new BTSequence(
-                            new BTConditionNode(() => !sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
+                            new BTConditionNode(() => !sharedBlackBoard.BlackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB)),
                             new BTCancelIfFalse(() => Vector3.Distance(transform.position, blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM).position) < attackRange,
-                            () => !sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
+                            () => !sharedBlackBoard.BlackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
                                  new BTAlwaysSuccesTask(() => stateUiText.text = "State : Attacking."),
                                  new BTAlwaysSuccesTask(() => blackBoard.GetVariable<Transform>(VariableNames.OWN_TRANSFORM).LookAt(blackBoard.GetVariable<Transform>(VariableNames.PLAYER_TRANSFORM))),
                                  new BTWaitFor(delayBetweenAttack),
@@ -189,12 +189,12 @@ public class Guard : MonoBehaviour, IWeaponOwner
 
                         //Handling For During The Smoke Window.
                         new BTSequence(
-                            new BTRepeatWhile(() => sharedBlackBoard.blackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
+                            new BTRepeatWhile(() => sharedBlackBoard.BlackBoard.GetVariable<bool>(VariableNames.SMOKE_BOMB),
                                 new BTSequence(
-                                    new BTAlwaysSuccesTask(() => sharedBlackBoard.blackBoard.SetVariable(VariableNames.IS_ATTACKING, false)),
+                                    new BTAlwaysSuccesTask(() => sharedBlackBoard.BlackBoard.SetVariable(VariableNames.IS_ATTACKING, false)),
                                     new BTAlwaysSuccesTask(() => stateUiText.text = "State : Smoked."),
                                     new BTWaitFor(waitTime),
-                                    new BTAlwaysSuccesTask(() => sharedBlackBoard.blackBoard.SetVariable(VariableNames.SMOKE_BOMB, false)),
+                                    new BTAlwaysSuccesTask(() => sharedBlackBoard.BlackBoard.SetVariable(VariableNames.SMOKE_BOMB, false)),
                                     new BTAlwaysFalse())),
                            new BTAlwaysFalse()
                             ),
@@ -204,10 +204,10 @@ public class Guard : MonoBehaviour, IWeaponOwner
                             new BTAlwaysSuccesTask(() =>
                             {
                                 Debug.Log("Attack Reset.");
-                                sharedBlackBoard.blackBoard.SetVariable(VariableNames.SMOKE_BOMB, false);
+                                sharedBlackBoard.BlackBoard.SetVariable(VariableNames.SMOKE_BOMB, false);
                                 blackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
-                                sharedBlackBoard.blackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
-                                sharedBlackBoard.blackBoard.SetVariable<Transform>(VariableNames.CURRENT_ATTACKING_ENEMY, null);
+                                sharedBlackBoard.BlackBoard.SetVariable(VariableNames.IS_ATTACKING, false);
+                                sharedBlackBoard.BlackBoard.SetVariable<Transform>(VariableNames.CURRENT_ATTACKING_ENEMY, null);
                                 treeAttackPlayer?.OnReset();
                             })
                         ))));
@@ -228,7 +228,7 @@ public class Guard : MonoBehaviour, IWeaponOwner
         gameOver = true;
         blackBoard.SetVariable(VariableNames.CHASING_PLAYER, false);
 
-        foreach ( var t in trees )
+        foreach ( BTBaseNode t in trees )
         {
             t?.OnReset();
         }

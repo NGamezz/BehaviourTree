@@ -3,5 +3,5 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class BlackBoardObject : ScriptableObject
 {
-    public Blackboard blackBoard = new();
+    public Blackboard BlackBoard = new();
 }
